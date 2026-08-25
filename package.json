@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint"
   },
+  
   "dependencies": {
     "@tiptap/extension-code-block-lowlight": "^3.30.3",
     "@tiptap/extension-image": "^3.30.3",
