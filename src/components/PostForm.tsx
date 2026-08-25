@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Editor } from "@/components/Editor";
+import { ImagePicker } from "@/components/ImagePicker";
 import { TagInput } from "@/components/TagInput";
 import { CATEGORIES } from "@/lib/categories";
 
@@ -164,13 +165,8 @@ export function PostForm({
           </p>
         </div>
 
-        <Field label="Imagen de portada (URL)">
-          <input
-            value={values.coverImage}
-            onChange={(e) => set("coverImage", e.target.value)}
-            placeholder="https://…"
-            className="input"
-          />
+        <Field label="Imagen de portada">
+          <ImagePicker value={values.coverImage} onChange={(url) => set("coverImage", url)} />
         </Field>
 
         <label className="flex items-center gap-2 text-sm text-fg-muted">

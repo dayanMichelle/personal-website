@@ -48,6 +48,18 @@ function tidy(markdown: string) {
   return out.join("\n");
 }
 
+// El editor trata las imágenes como bloque, así que en el archivo cada una va
+// en su propia línea en vez de pegada a la siguiente.
+turndown.addRule("blockImage", {
+  filter: "img",
+  replacement: (_content, node) => {
+    const image = node as HTMLElement;
+    const src = image.getAttribute("src");
+    if (!src) return "";
+    return `\n\n![${image.getAttribute("alt") ?? ""}](${src})\n\n`;
+  },
+});
+
 export function htmlToMarkdown(html: string) {
   return tidy(
     turndown

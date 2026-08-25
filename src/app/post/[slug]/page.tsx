@@ -76,7 +76,7 @@ export default async function PostPage({ params }: Props) {
         <img
           src={post.coverImage}
           alt=""
-          className="mt-10 w-full rounded-xl border border-ink-line object-cover"
+          className="mt-10 max-h-[28rem] w-full rounded-xl border border-ink-line object-cover"
         />
       ) : null}
 

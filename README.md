@@ -44,6 +44,35 @@ El sitio queda en http://localhost:3001.
    contenido) e imagen de portada.
 4. **Publicar** o **Guardar como borrador**. Los borradores no se ven en el sitio.
 
+## Imágenes
+
+Se suben desde el editor, no se enlazan por URL. Tres formas, todas equivalentes:
+
+- El botón **Imagen** de la barra de herramientas (admite varias a la vez).
+- **Arrastrar** el archivo dentro del editor.
+- **Pegar** desde el portapapeles — útil para capturas de pantalla.
+
+Cada imagen se guarda en `public/uploads/<año>/` con un nombre legible derivado
+del original más un sufijo corto que evita colisiones
+(`diagrama-flujo-oauth-f3c774.png`), y en el Markdown queda como una ruta local:
+
+```markdown
+![](/uploads/2026/diagrama-flujo-oauth-f3c774.png)
+```
+
+`public/uploads/` **se versiona junto al contenido**: las imágenes viajan con el
+repo y con el deploy, sin depender de ningún servicio externo.
+
+Se admiten PNG, JPG, WebP, GIF y AVIF, hasta 8 MB. SVG queda fuera a propósito:
+se serviría desde tu propio dominio y puede llevar scripts dentro; para
+diagramas, exporta a PNG o WebP.
+
+El texto alternativo se guarda vacío (`![](...)`). Si quieres describir una
+imagen —recomendable para los diagramas de un curso— escríbelo en el `.md`:
+`![Diagrama del flujo de autorización](/uploads/…)`.
+
+Las imágenes que dejes de usar no se borran solas; si limpias, revísalas a mano.
+
 ## Tags y cursos
 
 En la barra lateral del editor hay dos cosas más:
@@ -125,8 +154,10 @@ git add content && git commit -m "Clase 2: PKCE"
 ## Un aviso sobre desplegar
 
 En Vercel (y en cualquier serverless) el sistema de archivos es de solo lectura,
-así que **`/admin` solo escribe en local**. El flujo es: escribes en tu máquina,
-commiteas el `.md`, y el deploy publica. No puedes publicar desde el móvil.
+así que **`/admin` solo escribe en local** — esto vale igual para las entradas y
+para las imágenes que subas. El flujo es: escribes en tu máquina, commiteas el
+`.md` junto a `public/uploads/`, y el deploy publica. No puedes publicar desde el
+móvil.
 
 Todo el sitio público se genera en el build (`○`/`●` en la salida de
 `npm run build`), así que despliegas gratis en cualquier hosting estático sin
