@@ -3,21 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@tiptap/extension-code-block-lowlight": "^3.30.3",
+    "@tiptap/extension-image": "^3.30.3",
+    "@tiptap/extension-link": "^3.30.3",
+    "@tiptap/extension-placeholder": "^3.30.3",
+    "@tiptap/pm": "^3.30.3",
+    "@tiptap/react": "^3.30.3",
+    "@tiptap/starter-kit": "^3.30.3",
+    "gray-matter": "^4.0.3",
+    "lowlight": "^3.3.0",
+    "marked": "^18.0.11",
     "next": "16.3.2",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "slugify": "^1.6.9",
+    "turndown": "^7.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/turndown": "^5.0.6",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
     "tailwindcss": "^4",
