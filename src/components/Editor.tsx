@@ -1,11 +1,17 @@
 "use client";
 
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
 import { EditorContent, useEditor, type Editor as TiptapEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useCallback, useRef, useState } from "react";
+import { Callout, Highlight, TextColor } from "@/lib/editor-extensions";
+import { CALLOUTS, HIGHLIGHTS, TEXT_COLORS } from "@/lib/editor-palette";
+import { CODE_LANGUAGES, lowlight } from "@/lib/highlight";
 import { ACCEPT_IMAGES, uploadImage } from "@/lib/upload-client";
 import { isAllowedImage } from "@/lib/uploads";
 
@@ -41,9 +47,17 @@ export function Editor({ initialContent = "", onChange }: Props) {
   const editor = useEditor({
     immediatelyRender: false, // evita desajuste de hidratación en SSR
     extensions: [
-      StarterKit.configure({ link: false }),
+      // blockquote y codeBlock se sustituyen por las versiones con callout y
+      // con resaltado de sintaxis.
+      StarterKit.configure({ link: false, blockquote: false, codeBlock: false }),
+      Callout,
+      CodeBlockLowlight.configure({ lowlight, defaultLanguage: "ts" }),
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      TextColor,
+      Highlight,
       Placeholder.configure({ placeholder: "Escribe tu entrada…" }),
     ],
     content: initialContent,
@@ -168,17 +182,80 @@ function Toolbar({
         1. Lista
       </Btn>
       <Btn
-        on={editor.isActive("blockquote")}
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        on={editor.isActive("taskList")}
+        onClick={() => editor.chain().focus().toggleTaskList().run()}
+      >
+        ☑ Tareas
+      </Btn>
+      <Btn
+        on={editor.isActive("blockquote", { callout: null })}
+        onClick={() => editor.chain().focus().setCallout(null).run()}
       >
         ❝
       </Btn>
+      <Picker
+        label="Aviso"
+        active={CALLOUTS.some((c) => editor.isActive("blockquote", { callout: c.name }))}
+        options={CALLOUTS.map((c) => ({ value: c.name, label: c.label }))}
+        onSelect={(value) =>
+          editor
+            .chain()
+            .focus()
+            .setCallout(value as (typeof CALLOUTS)[number]["name"])
+            .run()
+        }
+      />
       <Btn
         on={editor.isActive("codeBlock")}
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
       >
         {"</>"}
       </Btn>
+      {editor.isActive("codeBlock") ? (
+        <select
+          value={(editor.getAttributes("codeBlock").language as string) ?? "ts"}
+          onChange={(e) =>
+            editor.chain().focus().updateAttributes("codeBlock", { language: e.target.value }).run()
+          }
+          className="rounded-md border border-ink-line bg-ink px-2 py-1 text-xs text-fg-muted"
+        >
+          {CODE_LANGUAGES.map((language) => (
+            <option key={language.id} value={language.id}>
+              {language.label}
+            </option>
+          ))}
+        </select>
+      ) : null}
+      <Sep />
+      <Picker
+        label="Color"
+        active={editor.isActive("textColor")}
+        options={[
+          ...TEXT_COLORS.map((c) => ({ value: c.name, label: c.label, swatch: `c-${c.name}` })),
+          { value: "", label: "Quitar color" },
+        ]}
+        onSelect={(value) =>
+          value
+            ? editor
+                .chain()
+                .focus()
+                .setTextColor(value as (typeof TEXT_COLORS)[number]["name"])
+                .run()
+            : editor.chain().focus().unsetTextColor().run()
+        }
+      />
+      <Picker
+        label="Resaltar"
+        active={editor.isActive("highlight")}
+        options={HIGHLIGHTS.map((h) => ({ value: h.name, label: h.label, swatch: `h-${h.name}` }))}
+        onSelect={(value) =>
+          editor
+            .chain()
+            .focus()
+            .toggleHighlight(value as (typeof HIGHLIGHTS)[number]["name"])
+            .run()
+        }
+      />
       <Sep />
       <Btn on={editor.isActive("link")} onClick={promptLink}>
         Enlace
@@ -200,6 +277,57 @@ function Toolbar({
       <Btn onClick={() => editor.chain().focus().undo().run()}>↺</Btn>
       <Btn onClick={() => editor.chain().focus().redo().run()}>↻</Btn>
     </div>
+  );
+}
+
+/** Menú corto: evita llenar la barra de botones para cada color o tipo de aviso. */
+function Picker({
+  label,
+  options,
+  onSelect,
+  active = false,
+}: {
+  label: string;
+  options: { value: string; label: string; swatch?: string }[];
+  onSelect: (value: string) => void;
+  active?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <span className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        onBlur={() => window.setTimeout(() => setOpen(false), 120)}
+        className={`rounded-md px-2.5 py-1 text-sm transition ${
+          active ? "bg-accent text-ink" : "text-fg-muted hover:bg-ink hover:text-fg"
+        }`}
+      >
+        {label} ▾
+      </button>
+      {open ? (
+        <span className="absolute left-0 top-full z-20 mt-1 flex w-40 flex-col overflow-hidden rounded-lg border border-ink-line bg-ink shadow-lg">
+          {options.map((option) => (
+            <button
+              key={option.value || "none"}
+              type="button"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onSelect(option.value);
+                setOpen(false);
+              }}
+              className="flex items-center gap-2 px-3 py-1.5 text-left text-sm text-fg-muted hover:bg-ink-soft hover:text-fg"
+            >
+              {option.swatch ? (
+                <span className={`size-3 shrink-0 rounded-full swatch-${option.swatch}`} />
+              ) : null}
+              {option.label}
+            </button>
+          ))}
+        </span>
+      ) : null}
+    </span>
   );
 }
 

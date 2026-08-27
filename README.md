@@ -44,6 +44,49 @@ El sitio queda en http://localhost:3001.
    contenido) e imagen de portada.
 4. **Publicar** o **Guardar como borrador**. Los borradores no se ven en el sitio.
 
+## Qué sabe hacer el editor
+
+Barra de herramientas: negrita, cursiva, tachado, H2/H3, listas, listas de
+tareas, cita, avisos, bloque de código, color, resaltado, enlace e imagen.
+También funcionan los atajos de Markdown (`## `, `- `, `> `, ` ``` `).
+
+**Código con resaltado de sintaxis.** Al poner el cursor en un bloque de código
+aparece un selector de lenguaje (TypeScript, JS, JSON, Shell, Python, Java, Go,
+SQL, HTML, CSS, YAML). El sitio publicado usa exactamente el mismo resaltador
+que el editor, así que lo que ves al escribir es lo que se publica.
+
+**Avisos.** El menú *Aviso* convierte un párrafo en un bloque de Nota, Consejo,
+Cuidado o Peligro. En el archivo se guardan con la sintaxis de GitHub, así que
+también se ven bien fuera de tu blog:
+
+```markdown
+> [!WARNING]
+> No reutilices el code_verifier entre peticiones.
+```
+
+**Listas de tareas** para los ejercicios de una clase: se guardan como
+`- [x] hecho` / `- [ ] pendiente`.
+
+### Color y resaltado: leer antes de usar
+
+Markdown **no tiene sintaxis para el color**. Para conservarlo hay que meter
+HTML dentro del archivo:
+
+```markdown
+Un <span class="c-warn">token de un solo uso</span> y algo <mark class="h-ok">resaltado</mark>.
+```
+
+Funciona y se recupera al reabrir la entrada, pero el `.md` deja de ser texto
+limpio y otro lector de Markdown puede ignorar el color o mostrar la etiqueta.
+Úsalo con cuentagotas; para destacar algo, casi siempre es mejor **negrita** o
+un aviso.
+
+La paleta es cerrada a propósito (acento, aviso, correcto, atenuado) en vez de
+un selector de color libre: el color lo decide el CSS, así siempre encaja con el
+diseño y nada queda ilegible. Se cambia en
+[`src/lib/editor-palette.ts`](src/lib/editor-palette.ts) y en el bloque de
+paleta de `globals.css`.
+
 ## Imágenes
 
 Se suben desde el editor, no se enlazan por URL. Tres formas, todas equivalentes:

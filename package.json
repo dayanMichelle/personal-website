@@ -8,16 +8,20 @@
     "start": "next start",
     "lint": "eslint"
   },
-  
   "dependencies": {
+    "@tiptap/core": "^3.30.3",
+    "@tiptap/extension-blockquote": "^3.30.3",
     "@tiptap/extension-code-block-lowlight": "^3.30.3",
     "@tiptap/extension-image": "^3.30.3",
     "@tiptap/extension-link": "^3.30.3",
     "@tiptap/extension-placeholder": "^3.30.3",
+    "@tiptap/extension-task-item": "^3.30.3",
+    "@tiptap/extension-task-list": "^3.30.3",
     "@tiptap/pm": "^3.30.3",
     "@tiptap/react": "^3.30.3",
     "@tiptap/starter-kit": "^3.30.3",
     "gray-matter": "^4.0.3",
+    "hast-util-to-html": "^9.0.5",
     "lowlight": "^3.3.0",
     "marked": "^18.0.11",
     "next": "16.3.2",

@@ -91,3 +91,94 @@ body {
   outline: none;
   border-color: var(--color-accent);
 }
+
+/* ---- Paleta del editor ---------------------------------------------------
+   Los mismos nombres que en editor-palette.ts. Al ser clases y no colores
+   fijos, el texto siempre encaja con el tema del sitio.                     */
+.prose-post .c-accent, .swatch-c-accent { color: var(--color-accent); }
+.prose-post .c-warn,   .swatch-c-warn   { color: #f0b72f; }
+.prose-post .c-ok,     .swatch-c-ok     { color: #3fb950; }
+.prose-post .c-muted,  .swatch-c-muted  { color: var(--color-fg-muted); }
+.swatch-c-accent, .swatch-c-warn, .swatch-c-ok, .swatch-c-muted { background: currentColor; }
+
+.prose-post mark {
+  border-radius: 0.25rem;
+  padding: 0.05em 0.25em;
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+  color: inherit;
+}
+.prose-post mark.h-warn, .swatch-h-warn { background: color-mix(in srgb, #f0b72f 28%, transparent); }
+.prose-post mark.h-ok,   .swatch-h-ok   { background: color-mix(in srgb, #3fb950 28%, transparent); }
+.swatch-h-accent { background: color-mix(in srgb, var(--color-accent) 60%, transparent); }
+
+/* ---- Avisos (callouts) ---- */
+.prose-post blockquote[data-callout] {
+  border-left-width: 3px;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: var(--color-ink-soft);
+  padding: 0.9rem 1rem;
+  font-style: normal;
+  color: #c9d1d9;
+}
+.prose-post blockquote[data-callout] > :first-child { margin-top: 0; }
+.prose-post blockquote[data-callout] > :last-child { margin-bottom: 0; }
+.prose-post blockquote[data-callout]::before {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.prose-post blockquote[data-callout="note"]    { border-left-color: var(--color-accent); }
+.prose-post blockquote[data-callout="note"]::before    { content: "Nota"; color: var(--color-accent); }
+.prose-post blockquote[data-callout="tip"]     { border-left-color: #3fb950; }
+.prose-post blockquote[data-callout="tip"]::before     { content: "Consejo"; color: #3fb950; }
+.prose-post blockquote[data-callout="warning"] { border-left-color: #f0b72f; }
+.prose-post blockquote[data-callout="warning"]::before { content: "Cuidado"; color: #f0b72f; }
+.prose-post blockquote[data-callout="danger"]  { border-left-color: #f85149; }
+.prose-post blockquote[data-callout="danger"]::before  { content: "Peligro"; color: #f85149; }
+
+/* ---- Listas de tareas ---- */
+.prose-post ul[data-type="taskList"] { list-style: none; padding-left: 0; }
+.prose-post ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.prose-post ul[data-type="taskList"] li > div { flex: 1; }
+.prose-post ul[data-type="taskList"] li > div > p { margin: 0; }
+.prose-post ul[data-type="taskList"] label {
+  display: flex;
+  align-items: center;
+  margin-top: 0.35rem;
+}
+.prose-post ul[data-type="taskList"] input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.prose-post ul[data-type="taskList"] li[data-checked="true"] > div {
+  color: var(--color-fg-muted);
+  text-decoration: line-through;
+}
+
+/* ---- Resaltado de sintaxis (clases de highlight.js) ---- */
+.prose-post .hljs-comment, .prose-post .hljs-quote { color: #8b949e; font-style: italic; }
+.prose-post .hljs-keyword, .prose-post .hljs-selector-tag, .prose-post .hljs-literal,
+.prose-post .hljs-type { color: #ff7b72; }
+.prose-post .hljs-string, .prose-post .hljs-meta .hljs-string,
+.prose-post .hljs-regexp { color: #a5d6ff; }
+.prose-post .hljs-number, .prose-post .hljs-symbol, .prose-post .hljs-bullet { color: #79c0ff; }
+.prose-post .hljs-title, .prose-post .hljs-title.function_,
+.prose-post .hljs-section { color: #d2a8ff; }
+.prose-post .hljs-attr, .prose-post .hljs-attribute,
+.prose-post .hljs-variable, .prose-post .hljs-template-variable { color: #ffa657; }
+.prose-post .hljs-built_in, .prose-post .hljs-class .hljs-title { color: #7ee787; }
+.prose-post .hljs-name, .prose-post .hljs-selector-id, .prose-post .hljs-selector-class { color: #7ee787; }
+.prose-post .hljs-meta { color: #8b949e; }
+.prose-post .hljs-deletion { color: #ffdcd7; background: rgba(248, 81, 73, 0.15); }
+.prose-post .hljs-addition { color: #aff5b4; background: rgba(63, 185, 80, 0.15); }
+.prose-post .hljs-emphasis { font-style: italic; }
+.prose-post .hljs-strong { font-weight: 600; }
